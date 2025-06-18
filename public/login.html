@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CodeMeetX - Collaborative Coding</title>
+   <link rel="stylesheet" href="style_login.css">
+    
+</head>
+<body>
+
+    <form 
+        method="post" action="/login"
+    >
+    
+
+       
+    <div class="glow"></div>
+    <div class="card">
+        <h1>CodeMeetX</h1>
+        <p>Collaborative coding meets <span style="color:#6366f1;font-weight:600;">Web3 rewards</span></p>
+
+        <div class="warning">
+            <strong>Development Mode:</strong> Firebase is not configured. Using mock authentication. Any email/password combination will work for testing.
+        </div>
+
+        <div class="tabs">
+            <button id="signInTab" class="active" onclick="switchTab('signin')">Sign In</button>
+            <button id="signUpTab" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signInForm">
+            <label>Email</label>
+            <input type="email" placeholder="you@example.com" required />
+
+            <label>Password</label>
+            <input type="password" placeholder="********" required />
+
+            <div style="text-align:right; margin-bottom:0.7rem;">
+                <a href="#" style="color:#38bdf8; font-size:0.95rem; text-decoration:none;">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="primary">Sign In with Email</button>
+
+            <div class="separator">Or continue with</div>
+
+            <div class="social">
+                <button class="google" type="button" onclick="window.location.href='https://accounts.google.com/signin'">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20">
+                        <g>
+                            <path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.8 33.1 30.1 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/>
+                            <path fill="#34A853" d="M6.3 14.7l7 5.1C15.5 16.1 19.4 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.6 0-14.1 4.2-17.7 10.7z"/>
+                            <path fill="#FBBC05" d="M24 45c5.6 0 10.6-1.9 14.5-5.1l-6.7-5.5C29.9 36.9 27.1 38 24 38c-6.1 0-10.8-2.9-13.7-7.1l-7 5.4C9.9 42.8 16.4 45 24 45z"/>
+                            <path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-1.1 3.1-4.1 5.5-7.7 5.5-3.1 0-5.9-1.1-8.1-2.9l-6.4 6.4C13.4 42.9 18.4 45 24 45c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/>
+                        </g>
+                    </svg>
+                    Google
+                </button>
+                <button class="microsoft" type="button" onclick="window.location.href='https://login.microsoftonline.com/'">
+                    <svg viewBox="0 0 24 24" fill="none"><g><rect fill="#F25022" x="2" y="2" width="9" height="9"/><rect fill="#7FBA00" x="13" y="2" width="9" height="9"/><rect fill="#00A4EF" x="2" y="13" width="9" height="9"/><rect fill="#FFB900" x="13" y="13" width="9" height="9"/></g></svg>
+                    Microsoft
+                </button>
+            </div>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signUpForm" class="hidden">
+            <label>Email</label>
+            <input type="email" placeholder="you@example.com" required />
+
+            <label>Password</label>
+            <input type="password" placeholder="********" required />
+
+            <label>Confirm Password</label>
+            <input type="password" placeholder="********" required />
+
+            <button type="submit" class="primary">Sign Up with Email</button>
+
+            <div class="separator">Or continue with</div>
+
+            <div class="social">
+                <button class="google" type="button" onclick="window.location.href='https://accounts.google.com/signin'">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20">
+                        <g>
+                            <path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.8 33.1 30.1 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/>
+                            <path fill="#34A853" d="M6.3 14.7l7 5.1C15.5 16.1 19.4 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.6 0-14.1 4.2-17.7 10.7z"/>
+                            <path fill="#FBBC05" d="M24 45c5.6 0 10.6-1.9 14.5-5.1l-6.7-5.5C29.9 36.9 27.1 38 24 38c-6.1 0-10.8-2.9-13.7-7.1l-7 5.4C9.9 42.8 16.4 45 24 45z"/>
+                            <path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-1.1 3.1-4.1 5.5-7.7 5.5-3.1 0-5.9-1.1-8.1-2.9l-6.4 6.4C13.4 42.9 18.4 45 24 45c10.5 0 20-7.6 20-21 0-1.3-.1-2.7-.3-4z"/>
+                        </g>
+                    </svg>
+                    Google
+                </button>
+                <button class="microsoft" type="button" onclick="window.location.href='https://login.microsoftonline.com/'">
+                    <svg viewBox="0 0 24 24" fill="none"><g><rect fill="#F25022" x="2" y="2" width="9" height="9"/><rect fill="#7FBA00" x="13" y="2" width="9" height="9"/><rect fill="#00A4EF" x="2" y="13" width="9" height="9"/><rect fill="#FFB900" x="13" y="13" width="9" height="9"/></g></svg>
+                    Microsoft
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function switchTab(tab) {
+            const signInTab = document.getElementById('signInTab');
+            const signUpTab = document.getElementById('signUpTab');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+
+            if (tab === 'signin') {
+                signInTab.classList.add('active');
+                signUpTab.classList.remove('active');
+                signInForm.classList.remove('hidden');
+                signUpForm.classList.add('hidden');
+            } else {
+                signUpTab.classList.add('active');
+                signInTab.classList.remove('active');
+                signUpForm.classList.remove('hidden');
+                signInForm.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
