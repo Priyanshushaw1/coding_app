@@ -1,78 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CodeMeetX - Collaborative Coding Platform</title>
-  
-  <link rel="stylesheet" href="style_index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | CodeMeetX</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form 
-    
-    method="post" 
-    action="/signin.html">
+    <div class="glow"></div>
+    <div class="card">
+        <h1>CodeMeetX</h1>
+        <p>Collaborative coding meets <span style="color:#6366f1;font-weight:600;">Web3 rewards</span></p>
 
-  <header>
-    <div class="logo">💻 CodeMeetX</div>
-    <nav>
-      <!-- In the header navigation -->
-<nav>
-  <a href="#">About</a>
-  <a href="#">Features</a>
-  <a href="#">Pricing</a>
-  <a href="signin.html">Sign In</a> <!-- Changed to link to login.html -->
-</nav>
+        <div class="tabs">
+            <button id="signInTab" class="active">Sign In</button>
+            <button id="signUpTab">Sign Up</button>
+        </div>
 
-<!-- In the hero section -->
-<button class="get-started" onclick="window.location.href='login.html'">Get Started</button>
+        <!-- Sign In Form -->
+        <form id="signInForm">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com" required>
 
-<!-- In the CTA section -->
-<button onclick="window.location.href='login.html'">Start Coding Now →</button>
-    </nav>
-  </header>
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="********" required>
 
-  <section class="hero">
-    <h1>Let's<br /><span>Debug with us</span></h1>
-    <p>
-      CodeMeetX brings developers together for real-time collaboration,<br />
-      with integrated video, AI assistance, and get rewards.
-    </p>
-    <button class="get-started" onclick="document.querySelector('.features').scrollIntoView({ behavior: 'smooth' });">Get Started</button>
-    <button class="learn-more" onclick="document.querySelector('.features').scrollIntoView({ behavior: 'smooth' });">Learn More</button>
-  </section>
+            <div style="text-align:right; margin-bottom:0.7rem;">
+                <a href="#" style="color:#38bdf8; font-size:0.95rem; text-decoration:none;">Forgot password?</a>
+            </div>
 
-  <section class="features">
-    <div class="feature-card">
-      <h3>Real-time Collaboration</h3>
-      <p>Code together in real-time with syntax highlighting and suggestions.</p>
+            <button type="submit" class="primary">Sign In</button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signUpForm" class="hidden">
+            <label>Name</label>
+            <input type="text" id="registerName" placeholder="Your name" required>
+
+            <label>Email</label>
+            <input type="email" id="registerEmail" placeholder="you@example.com" required>
+
+            <label>Password</label>
+            <input type="password" id="registerPassword" placeholder="********" required minlength="6">
+
+            <label>Age</label>
+            <input type="number" id="registerAge" placeholder="18" min="18" required>
+
+            <button type="submit" class="primary">Sign Up</button>
+        </form>
+
+        <div id="message" class="message"></div>
     </div>
-    <div class="feature-card">
-      <h3>Video Conferencing</h3>
-      <p>Integrated video calls and screen sharing for seamless communication.</p>
-    </div>
-    <div class="feature-card">
-      <h3>AI Assistance</h3>
-      <p>Get intelligent code suggestions and explanations powered by AI.</p>
-    </div>
-   
-  </section>
 
-  <section class="cta">
-    <h2>Ready to elevate your coding experience?</h2>
-    <p>Join thousands of developers already using CodeMeetX to collaborate, learn, and earn.</p>
-    <button>Start Coding Now →</button>
-  </section>
+    <script>
+        // Tab switching
+        document.getElementById('signInTab').addEventListener('click', () => switchTab('signin'));
+        document.getElementById('signUpTab').addEventListener('click', () => switchTab('signup'));
 
-  <footer>
-    <div>© 2025 CodeMeetX. All rights reserved.</div>
-    <div>
-      <a href="#">About</a>
-      <a href="#">Features</a>
-      <a href="#">Pricing</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-    </div>
-  </footer>
+        function switchTab(tab) {
+            const signInTab = document.getElementById('signInTab');
+            const signUpTab = document.getElementById('signUpTab');
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+
+            if (tab === 'signin') {
+                signInTab.classList.add('active');
+                signUpTab.classList.remove('active');
+                signInForm.classList.remove('hidden');
+                signUpForm.classList.add('hidden');
+            } else {
+                signUpTab.classList.add('active');
+                signInTab.classList.remove('active');
+                signUpForm.classList.remove('hidden');
+                signInForm.classList.add('hidden');
+            }
+        }
+
+        // Form submissions
+        document.getElementById('signInForm').addEventListener('submit', handleLogin);
+        document.getElementById('signUpForm').addEventListener('submit', handleRegister);
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store token and redirect
+                    localStorage.setItem('token', data.token);
+                    window.location.href = '/';
+                } else {
+                    showMessage(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const age = document.getElementById('registerAge').value;
+
+            try {
+                const response = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password, age })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Registration successful! Please login.', 'success');
+                    switchTab('signin');
+                } else {
+                    showMessage(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
 </html>

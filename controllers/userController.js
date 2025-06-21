@@ -1,42 +1,86 @@
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 
-// Get all users
-exports.getAllUsers = async (req, res) => {
+const createToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: '1d'
+  });
+};
+
+exports.registerUser = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
-  } catch(err) {
-    res.status(500).send(err.message);
+    const { name, email, password, age } = req.body;
+    
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+
+    const user = new User({ name, email, password, age });
+    await user.save();
+    
+    // Create token
+    const token = createToken(user._id);
+    
+    res.status(201).json({
+      status: 'success',
+      token,
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          age: user.age
+        }
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };
 
-// Create new user
-exports.createUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
   try {
-    const user = new User({ 
-      name: req.body.name,
-      email: req.body.email,
-      age: req.body.age
-    });
+    const { email, password } = req.body;
     
-    // Schema validation automatically happens here
-    await user.save();
-    
-    res.status(201).json({
-      message: "User created successfully!",
-      user: user
-    });
-  } catch(err) {
-    // Different error types
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({
-        error: 'Validation Error',
-        details: err.message
-      });
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
-    res.status(500).json({
-      error: 'Server Error',
-      details: err.message
+    
+    // Check password
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    // Create token
+    const token = createToken(user._id);
+    
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          age: user.age
+        }
+      }
     });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
